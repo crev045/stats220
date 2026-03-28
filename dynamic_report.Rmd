@@ -1,0 +1,64 @@
+---
+title: My dynamic report
+output: html_fragment
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo=FALSE, message=FALSE, warning=FALSE, error=FALSE)
+
+```
+
+```{css}
+
+```
+
+## How likely are dogs to eat in the first 24 hours after arriving at a Quarantine Facilty?
+Imagine being put in a box, and then on a plane, for an undetermined amount of time and then suddenly you are in a new place with strange people. Would you still have an appetite?
+
+This data is looking at whether or not a dog eats within 24 hours of arrival, and what sort of food is being offered. 
+
+
+
+```{r}
+
+library(tidyverse)
+csv_file <- "https://docs.google.com/spreadsheets/d/e/2PACX-1vSwN858bjItpjMDMXxz5a9t-uOpOHU4ntogGY6x054Il3A14FySzydRngWBNUF3MsRNIw3oP-m2Mb0t/pub?gid=431291523&single=true&output=csv"
+
+# Rename data variables
+logged_data <- read_csv(csv_file) %>%
+rename( dog_weight = 2,
+       dog_eaten = 3,
+       food_provided = 4,
+       health_issues = 5)
+
+latest_data <- logged_data
+
+paste0( "The weight of the smallest dog in this data is ", 
+      min(logged_data$dog_weight), 
+      "kg.", 
+      collapse = " ")
+paste0("The weight of the largest dog in this data is ", 
+      max(logged_data$dog_weight), 
+      "kg.",
+      collapse = " ")
+
+#Graph that shows what number of dogs have eaten within the first 24 hours of arrival.
+
+ggplot(data = latest_data) +
+  geom_bar(aes(x = dog_eaten),
+           fill = "#28B85B") +
+  labs(title = "Did the dog eat within 24 hours of arrival?",
+       x = "Has the dog eaten",
+       y = "Number of dogs")
+
+# A graph that shows the type of food that has been provided to the dog. 
+
+ggplot(data = latest_data) +
+  geom_bar(aes(x = food_provided),
+           fill = "#EB4646") +
+  labs(title = "Food provided to dogs at Quarantine Facility",
+       x = "Brand of dog food",
+       y = "Number of dogs")
+
+```
+
